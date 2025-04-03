@@ -4,12 +4,15 @@ import APIClient, { FetchResponse } from "../services/api-client";
 import Error from "next/error";
 
 
-interface Character {
-    name: string,
-    birth_year: string,
-    gender: string
+export interface Character {
+  name: string,
+  birth_year: string,
+  gender: string,
+  height: string,
+  mass: string,
+  homeworld: string,
+  films: string[]
 }
-
 
 
 const apiClient = new APIClient<Character>("/people/")
