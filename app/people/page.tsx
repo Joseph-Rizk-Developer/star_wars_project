@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import useCharacters from "../hooks/useCharaters";
+import useCharacters from "../hooks/useCharacters";
 import useCharacter from "../hooks/useCharacter";
 
 const headers = ["Name", "DOB", "Gender"];
