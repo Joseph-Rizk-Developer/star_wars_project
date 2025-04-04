@@ -9,30 +9,28 @@ interface Films {
 
 const apiClient = new APIClient<Films>("/films")
 
-const filmIds: string[] = []
-const useFilms = (films: string[]) =>{
-    console.log("use films.length: " + films.length);
-    console.log("use filmIds.length: " + filmIds.length);
-    while(filmIds.length <= films.length){
-        films.forEach(film => {const filmId = film.split("/").filter(Boolean).pop();
-        if(filmId){
-            filmIds.push(filmId)
-        }
-    
-        });
-    }
 
-    console.log("films: " + films);
-    console.log("filmIds: " + filmIds);
-    
+const useFilms = (films: string[]) =>{
    
-    return useQueries({
-        queries: filmIds.map((id) => ({
+    console.log("films log: " + films);
+    
+    
+     return useQueries({
+        queries: films.map((id) => ({
             queryKey: ["Films", id],
             queryFn: () => apiClient.get(id),
-            enabled: !!id,
-            staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+            enable: films.length,
+            staletime: 1000 * 60 * 5, // Cache for 5 minutes
+            
+            
+         
         })),
+        combine: (results) => {
+            return {
+                data: results.map((result) => result.data),
+                pending: results.some((result) => result.isPending),
+            }
+        }
        
     })
    

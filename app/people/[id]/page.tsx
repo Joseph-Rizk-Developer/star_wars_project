@@ -23,14 +23,23 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
 
   const { data: selectedPlanet } = usePlanet(planetId ?? "");
 
-  const films = useFilms(character?.films ?? []);
+  const filmIds = useMemo(
+    () =>
+      character?.films.map(
+        (film) => film.split("/").filter(Boolean).pop() as string
+      ) ?? [],
+    [character]
+  );
 
-  const filmTitles = useMemo(() => {
-    return films.map((film) => film.data?.title).filter(Boolean);
-  }, []);
+  const { data: films, pending } = useFilms(filmIds);
+
+  const filmTitles = !pending ? films.map((film) => film?.title) : [];
+
+  !pending && console.log(films.map((film) => film?.title));
 
   return (
     <div>
+      <h1>{character?.name}</h1>
       <table>
         <tbody>
           {character_details.map((header) => (

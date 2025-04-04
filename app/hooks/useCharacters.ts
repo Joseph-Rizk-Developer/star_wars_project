@@ -21,6 +21,7 @@ const useCharacters = (pageParam: number) => {
     return useQuery<FetchResponse<Character>, Error>({
       queryKey: ["characters", pageParam],
       queryFn: () =>apiClient.getAll({ params: { page: pageParam } }),
+      staleTime: 1000 * 60 * 5, // Cache for 5 minutes
       
     });
 };
