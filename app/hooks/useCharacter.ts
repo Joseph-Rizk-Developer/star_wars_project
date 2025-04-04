@@ -10,7 +10,7 @@ const useCharacter = (characterid: string) =>
   useQuery({
     queryKey: ["character", characterid],
     queryFn:  () => apiClient.get(characterid),
-   
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
   

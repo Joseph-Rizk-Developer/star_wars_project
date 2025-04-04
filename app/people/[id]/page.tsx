@@ -1,8 +1,9 @@
 "use client";
 import useCharacter from "@/app/hooks/useCharacter";
 import { Character } from "@/app/hooks/useCharacters";
+import useFilms from "@/app/hooks/useFilms";
 import usePlanet from "@/app/hooks/usePlanet";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 interface Props {
   params: { id: string };
@@ -16,14 +17,18 @@ const character_details: (keyof Character)[] = [
 ];
 
 const SelectedCharacter = ({ params: { id } }: Props) => {
-  const { data: character, isLoading } = useCharacter(id!);
+  const { data: character, isLoading, isError } = useCharacter(id!);
 
-  const homeworld = character?.homeworld;
-  const homeworldId = homeworld?.split("/").filter(Boolean).pop();
+  const planetId = character?.homeworld?.split("/").filter(Boolean).pop()!;
 
-  const { data: planet } = usePlanet(homeworldId!);
+  const { data: selectedPlanet } = usePlanet(planetId ?? "");
 
-  if (isLoading) return null;
+  const films = useFilms(character?.films ?? []);
+
+  const filmTitles = useMemo(() => {
+    return films.map((film) => film.data?.title).filter(Boolean);
+  }, []);
+
   return (
     <div>
       <table>
@@ -34,9 +39,9 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
 
               <td>
                 {header == "homeworld"
-                  ? planet?.name
+                  ? selectedPlanet?.name
                   : header == "films"
-                  ? "Film"
+                  ? filmTitles.join(",")
                   : character
                   ? character[header] || "N/A"
                   : "Loading..."}

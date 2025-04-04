@@ -11,7 +11,10 @@ const apiClient = new APIClient<Planet>("/planets")
 const usePlanet = (homeworldId: string) => useQuery({
 
     queryKey: ["Planet", homeworldId],
-    queryFn: () => apiClient.get(homeworldId)
+    queryFn: () => apiClient.get(homeworldId),
+    enabled: !!homeworldId,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+   
 
 })
 
