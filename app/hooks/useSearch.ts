@@ -6,19 +6,12 @@ import { Character } from "./useCharacters";
 
 
 const apiClient = new APIClient<Character>("/people")
-const useCharacter = (characterid: string) => 
+const useSearch = (characterName: string) =>
   useQuery({
-      queryKey: ["character", characterid],
-      queryFn:  () => apiClient.get(characterid),
-      staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    });
- 
-  
+    queryKey: ["character", characterName],
+    queryFn:  () => apiClient.search(characterName),
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+  });
 
   
-
-
- 
-
-  
-export default useCharacter
+export default useSearch

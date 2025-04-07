@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import useCharacters from "../hooks/useCharacters";
 import useCharacter from "../hooks/useCharacter";
+import Link from "next/link";
 
 const headers = ["Name", "DOB", "Gender"];
 const Characters = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, error } = useCharacters(page);
+  console.log("character data: " + data?.results.length);
 
   if (error) return { error };
   return (
@@ -29,11 +31,14 @@ const Characters = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.results.map((character) => (
-            <tr key={character.name} className="font-bold hover:bg-yellow-400">
+          {data?.results.map((character, index) => (
+            <tr key={index} className="font-bold hover:bg-yellow-400">
               <td className="border border-gray-400 px-4 py-2">
-                {character.name}
+                <Link href={`/people/name/${character.name}`}>
+                  {character.name}
+                </Link>
               </td>
+
               <td className="border border-gray-400 px-4 py-2">
                 {character.birth_year}
               </td>
@@ -57,7 +62,7 @@ const Characters = () => {
         <button
           className="border border-amber-500 text-yellow-500 hover:bg-yellow-400 hover:text-white font-bold  py-2 px-4 rounded-full "
           onClick={() => setPage(page + 1)}
-          disabled={data?.count! - page * 10 <= 10 ? true : false}
+          disabled={data?.count! - page * 10 <= 1 ? true : false}
         >
           {isLoading ? <div className="loader"></div> : "Next page"}
         </button>

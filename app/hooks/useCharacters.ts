@@ -11,7 +11,9 @@ export interface Character {
   height: string,
   mass: string,
   homeworld: string,
-  films: string[]
+  films: string[],
+  starships: string[],
+  passenger_capacity: number[]
 }
 
 

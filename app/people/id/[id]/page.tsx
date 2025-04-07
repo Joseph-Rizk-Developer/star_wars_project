@@ -3,13 +3,14 @@ import useCharacter from "@/app/hooks/useCharacter";
 import { Character } from "@/app/hooks/useCharacters";
 import useFilms from "@/app/hooks/useFilms";
 import usePlanet from "@/app/hooks/usePlanet";
-import React, { useEffect, useMemo, useState } from "react";
+import useSearch from "@/app/hooks/useSearch";
+import React, { useMemo } from "react";
 
 interface Props {
   params: { id: string };
 }
 
-const character_details: (keyof Character)[] = [
+export const character_details: (keyof Character)[] = [
   "height",
   "mass",
   "homeworld",
@@ -17,7 +18,9 @@ const character_details: (keyof Character)[] = [
 ];
 
 const SelectedCharacter = ({ params: { id } }: Props) => {
-  const { data: character, isLoading, isError } = useCharacter(id!);
+  console.log("name: " + id);
+
+  const { data: character, isLoading, isError } = useCharacter(id);
 
   const planetId = character?.homeworld?.split("/").filter(Boolean).pop()!;
 
