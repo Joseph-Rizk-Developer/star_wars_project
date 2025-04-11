@@ -32,7 +32,7 @@ const listOfPilots = () => {
       const list_of_pilots = characters.results.filter(
         (char) => char.starships.length >= 1
       );
-      //  console.log("list of pilots: " + list_of_pilots.map((char) => char.name));
+
       setPilots([...pilots.concat(...list_of_pilots)]);
 
       if (characters?.count! - page * 10 > 1) {
@@ -42,11 +42,8 @@ const listOfPilots = () => {
             list_starships[list_starships.length - 1] != list[list.length - 1]
           ) {
             setList_starships([...list_starships, ...list]);
-
-            //    console.log("starship page: " + starship_page);
           }
           starship_page != 4 ? set_starship_page(starship_page + 1) : null;
-          // console.log(list_starships);
         }
         setPage(page + 1);
       }
@@ -73,8 +70,6 @@ const listOfPilots = () => {
     }
   }, [characters]);
 
-  console.log(readyForSum);
-
   return (
     <div
       style={{
@@ -85,7 +80,7 @@ const listOfPilots = () => {
         justifyItems: "center",
       }}
     >
-      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style">
+      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style pb-5">
         Pilots
       </h1>
       <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
@@ -120,7 +115,7 @@ const listOfPilots = () => {
         </tbody>
       </table>
       {!readyForSum && <div className="loader"></div>}
-      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style">
+      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style pb-5">
         Top 5 Pilots
       </h1>
       <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">

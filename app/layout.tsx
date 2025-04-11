@@ -6,6 +6,7 @@ import { Theme } from "@radix-ui/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import QueryProvider from "./components/QueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import NavBar from "./NavBar";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
+          <NavBar />
           {children}
           <ReactQueryDevtools />
         </QueryProvider>
