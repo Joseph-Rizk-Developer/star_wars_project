@@ -14,7 +14,7 @@ const listOfPilots = () => {
   const { data: starships } = useStarships(starship_page);
   const [list_starships, setList_starships] = useState<Starships[]>([]);
   const [topFive, setTopFive] = useState<Character[]>([]);
-  let ready_for_sum = false;
+  const [readyForSum, setReadyForSum] = useState(false);
 
   const top_5_pilots = (pilots: Character[]) => {
     const new_list = pilots
@@ -66,26 +66,28 @@ const listOfPilots = () => {
               : 0;
           }),
         }));
-
+        setReadyForSum(true);
         setPilots(updatedPilots);
-        ready_for_sum = true;
-        if (ready_for_sum) {
-          setTopFive(top_5_pilots(updatedPilots));
-        }
+        setTopFive(top_5_pilots(updatedPilots));
       }
     }
   }, [characters]);
 
-  if (topFive) {
-    console.log(
-      "top five:" +
-        topFive.map((pilot) => pilot.name + " " + pilot.passenger_capacity)
-    );
-  }
+  console.log(readyForSum);
 
   return (
-    <div>
-      <h1>Pilots</h1>
+    <div
+      style={{
+        width: "100%",
+        height: "100",
+        paddingTop: "10%",
+        paddingBottom: "10%",
+        justifyItems: "center",
+      }}
+    >
+      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style">
+        Pilots
+      </h1>
       <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <thead>
           <tr className="bg-yellow-400">
@@ -94,27 +96,33 @@ const listOfPilots = () => {
             <th>total passenger capacity</th>
           </tr>
         </thead>
+
         <tbody>
-          {pilots.map((pilot) => (
-            <tr className="font-bold hover:bg-yellow-400" key={pilot.name}>
-              <td className="border border-gray-400 px-4 py-2">{pilot.name}</td>
-              <td className="border border-gray-400 px-4 py-2">
-                {pilot.starships.join(", ")}
-              </td>
-              <td className="border border-gray-400 px-4 py-2">
-                {pilot.passenger_capacity
-                  ? pilot.passenger_capacity.reduce(
-                      (total, num) => total + num,
-                      0
-                    )
-                  : 0}
-              </td>
-            </tr>
-          ))}
+          {readyForSum &&
+            pilots.map((pilot) => (
+              <tr className="font-bold hover:bg-yellow-400" key={pilot.name}>
+                <td className="border border-gray-400 px-4 py-2">
+                  {pilot.name}
+                </td>
+                <td className="border border-gray-400 px-4 py-2">
+                  {pilot.starships.join(", ")}
+                </td>
+                <td className="border border-gray-400 px-4 py-2">
+                  {pilot.passenger_capacity
+                    ? pilot.passenger_capacity.reduce(
+                        (total, num) => total + num,
+                        0
+                      )
+                    : 0}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
-
-      <h1>Top 5 Pilots</h1>
+      {!readyForSum && <div className="loader"></div>}
+      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style">
+        Top 5 Pilots
+      </h1>
       <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <thead>
           <tr className="bg-yellow-400">
@@ -137,46 +145,9 @@ const listOfPilots = () => {
           ))}
         </tbody>
       </table>
+      {!readyForSum && <div className="loader"></div>}
     </div>
   );
 };
 
 export default listOfPilots;
-
-// if (pilots) {
-//   pilots.map(
-//     (pilot) =>
-//       pilot.starships.map((ship) => {
-//         const match = list_starships?.find((s) => s.url == ship);
-//         ship = match!.name;
-//       }),
-//     console.log("ships: " + pilots.map((s) => s.starships))
-//   );
-// }
-
-// const updatedPilots = pilots.map((pilot) => ({
-//   ...pilot,
-//   starships: pilot.starships.map((ship) => {
-//     const match = list_starships?.find((s) => s.url === ship);
-//     return match ? match.name : "nope";
-//   }),
-// }));
-
-// let value: string[] = [];
-// for (let i = 0; i < list_starships.length; i++) {
-//   value = pilots[i].starships;
-//   for (let j = 0; j < value.length; j++) {
-//     const name_of_starship = list_starships.find(
-//       (s) => s.url === value[j]
-//     );
-//     console.log("name of starship " + value[j]);
-
-//     value[j] = name_of_starship!.name;
-//   }
-// }
-
-// const updatedPilots = pilots.map((pilot) => ({
-//   ...pilot,
-//   starships: value,
-// }));
-// setPilots(updatedPilots);
