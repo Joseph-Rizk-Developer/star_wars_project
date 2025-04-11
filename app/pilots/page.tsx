@@ -13,8 +13,20 @@ const listOfPilots = () => {
   const { data: characters } = useCharacters(page);
   const { data: starships } = useStarships(starship_page);
   const [list_starships, setList_starships] = useState<Starships[]>([]);
+  const [topFive, setTopFive] = useState<Character[]>([]);
   let ready_for_sum = false;
 
+  const top_5_pilots = (pilots: Character[]) => {
+    const new_list = pilots
+      .slice()
+      .sort(
+        (a, b) =>
+          b.passenger_capacity.reduce((total, num) => total + num, 0) -
+          a.passenger_capacity.reduce((total, num) => total + num, 0)
+      )
+      .slice(0, 5);
+    return new_list;
+  };
   useEffect(() => {
     if (characters && starships) {
       const list_of_pilots = characters.results.filter(
@@ -57,9 +69,19 @@ const listOfPilots = () => {
 
         setPilots(updatedPilots);
         ready_for_sum = true;
+        if (ready_for_sum) {
+          setTopFive(top_5_pilots(updatedPilots));
+        }
       }
     }
   }, [characters]);
+
+  if (topFive) {
+    console.log(
+      "top five:" +
+        topFive.map((pilot) => pilot.name + " " + pilot.passenger_capacity)
+    );
+  }
 
   return (
     <div>
@@ -84,6 +106,28 @@ const listOfPilots = () => {
                       0
                     )
                   : 0}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h1>Top 5 Pilots</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Number of Starships</th>
+            <th>Total Passenger Capacity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {topFive.map((pilot) => (
+            <tr>
+              <td>{pilot.name}</td>
+              <td>{pilot.starships.length}</td>
+              <td>
+                {pilot.passenger_capacity.reduce((total, num) => total + num)}
               </td>
             </tr>
           ))}
