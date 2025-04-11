@@ -86,9 +86,9 @@ const listOfPilots = () => {
   return (
     <div>
       <h1>Pilots</h1>
-      <table>
+      <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <thead>
-          <tr>
+          <tr className="bg-yellow-400">
             <th>Name</th>
             <th>Starships</th>
             <th>total passenger capacity</th>
@@ -96,10 +96,12 @@ const listOfPilots = () => {
         </thead>
         <tbody>
           {pilots.map((pilot) => (
-            <tr key={pilot.name}>
-              <td>{pilot.name}</td>
-              {pilot.starships}
-              <td>
+            <tr className="font-bold hover:bg-yellow-400" key={pilot.name}>
+              <td className="border border-gray-400 px-4 py-2">{pilot.name}</td>
+              <td className="border border-gray-400 px-4 py-2">
+                {pilot.starships.join(", ")}
+              </td>
+              <td className="border border-gray-400 px-4 py-2">
                 {pilot.passenger_capacity
                   ? pilot.passenger_capacity.reduce(
                       (total, num) => total + num,
@@ -113,20 +115,22 @@ const listOfPilots = () => {
       </table>
 
       <h1>Top 5 Pilots</h1>
-      <table>
+      <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <thead>
-          <tr>
+          <tr className="bg-yellow-400">
             <th>Name</th>
             <th>Number of Starships</th>
             <th>Total Passenger Capacity</th>
           </tr>
         </thead>
         <tbody>
-          {topFive.map((pilot) => (
-            <tr>
-              <td>{pilot.name}</td>
-              <td>{pilot.starships.length}</td>
-              <td>
+          {topFive.map((pilot, index) => (
+            <tr key={index} className="font-bold hover:bg-yellow-400">
+              <td className="border border-gray-400 px-4 py-2">{pilot.name}</td>
+              <td className="border border-gray-400 px-4 py-2">
+                {pilot.starships.length}
+              </td>
+              <td className="border border-gray-400 px-4 py-2">
                 {pilot.passenger_capacity.reduce((total, num) => total + num)}
               </td>
             </tr>
