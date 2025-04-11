@@ -10,14 +10,20 @@ interface Props {
 }
 
 const SelectedName = ({ params: { name } }: Props) => {
-  const { data: character, isLoading, isError } = useSearch(name);
+  const {
+    data: character,
+    isLoading: isloadingSearch,
+    isError,
+  } = useSearch(name);
 
   const planetId = character?.results[0].homeworld
     .split("/")
     .filter(Boolean)
     .pop();
 
-  const { data: selectedPlanet } = usePlanet(planetId ?? "");
+  const { data: selectedPlanet, isLoading: isloadingPlanet } = usePlanet(
+    planetId ?? ""
+  );
 
   const filmIds = useMemo(
     () =>
@@ -33,23 +39,35 @@ const SelectedName = ({ params: { name } }: Props) => {
 
   !pending && console.log(films.map((film) => film?.title));
 
+  if (isloadingSearch || isloadingPlanet) {
+    return (
+      <div className="w-full h-[100] pt-[10%] pb-[10%] flex justify-center items-center ">
+        <div className="loader" />
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h1>{character?.results[0].name}</h1>
-      <table>
+    <div className="w-full h-[100] pt-[10%] pb-[10%] justify-items-center">
+      <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style pb-5">
+        {character?.results[0].name}
+      </h1>
+      <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <tbody>
           {character_details.map((header) => (
-            <tr key={header}>
-              <th>{header.toUpperCase()}</th>
+            <tr className="border border-gray-400" key={header}>
+              <th className="bg-yellow-400 border-gray-400">
+                {header.toUpperCase()}
+              </th>
 
-              <td>
+              <td className="border border-gray-400 px-4 py-2">
                 {header == "homeworld"
                   ? selectedPlanet?.name
                   : header == "films"
-                  ? filmTitles.join(",")
+                  ? filmTitles.join(", ")
                   : character
                   ? character.results[0][header] || "N/A"
-                  : "Loading..."}
+                  : ""}
               </td>
             </tr>
           ))}
