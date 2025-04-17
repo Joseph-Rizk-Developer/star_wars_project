@@ -1,14 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import useCharacters from "../hooks/useCharacters";
 import useCharacter from "../hooks/useCharacter";
 import Link from "next/link";
+import useCharacterData from "../hooks/useCharacterData";
 
 const headers = ["Name", "DOB", "Gender"];
 const Characters = () => {
+  const { data, isLoading, error } = useCharacters();
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useCharacters(page);
-  console.log("character data: " + data?.results.length);
+  const the_data = useMemo(
+    () =>
+      data?.map(
+        (character) => character.fields.url.split("/").pop() as string
+      ) ?? [],
+    [data]
+  );
+  const rows_per_page = 10;
+
+  const { data: characters, pending } = useCharacterData(the_data);
+
+  const paginated_data = useMemo(() => {
+    const starting_index = (page - 1) * rows_per_page;
+    const ending_index = starting_index + rows_per_page;
+    return characters?.slice(starting_index, ending_index);
+  }, [characters, page]);
 
   if (error) return { error };
   return (
@@ -31,19 +47,19 @@ const Characters = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.results.map((character, index) => (
+          {paginated_data?.map((character, index) => (
             <tr key={index} className="font-bold hover:bg-yellow-400">
               <td className="border border-gray-400 px-4 py-2">
-                <Link href={`/people/name/${character.name}`}>
-                  {character.name}
+                <Link href={`/people/name/${character?.fields.name}`}>
+                  {character?.fields.name}
                 </Link>
               </td>
 
               <td className="border border-gray-400 px-4 py-2">
-                {character.birth_year}
+                {character?.fields.birth_year}
               </td>
               <td className="border border-gray-400 px-4 py-2">
-                {character.gender}
+                {character?.fields.gender}
               </td>
             </tr>
           ))}
@@ -62,7 +78,7 @@ const Characters = () => {
         <button
           className="border border-amber-500 text-yellow-500 hover:bg-yellow-400 hover:text-white font-bold  py-2 px-4 rounded-full "
           onClick={() => setPage(page + 1)}
-          disabled={data?.count! - page * 10 <= 1 ? true : false}
+          disabled={paginated_data.length < 9 ? true : false}
         >
           {isLoading ? <div className="loader"></div> : "Next page"}
         </button>

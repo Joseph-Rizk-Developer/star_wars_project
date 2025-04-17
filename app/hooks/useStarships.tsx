@@ -10,10 +10,10 @@ export interface Starships {
 
 const apiClient = new APIClient<Starships>("/starships");
 
-const useStarships = (pageParam: number) =>
+const useStarships = () =>
   useQuery({
-    queryKey: ["Starships", pageParam],
-    queryFn: () => apiClient.getAll({ params: { page: pageParam } }),
+    queryKey: ["Starships"],
+    queryFn: () => apiClient.getAll,
   });
 
 export default useStarships;

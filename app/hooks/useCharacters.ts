@@ -1,6 +1,6 @@
 "use client"
 import { useQuery, useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
-import APIClient, { FetchResponse } from "../services/api-client";
+import APIClient from "../services/api-client";
 import Error from "next/error";
 
 
@@ -13,16 +13,17 @@ export interface Character {
   homeworld: string,
   films: string[],
   starships: string[],
-  passenger_capacity: number[]
+  passenger_capacity: number[],
+  url: string
 }
 
 
 const apiClient = new APIClient<Character>("/people/")
 
-const useCharacters = (pageParam: number) => {
-    return useQuery<FetchResponse<Character>, Error>({
-      queryKey: ["characters", pageParam],
-      queryFn: () =>apiClient.getAll({ params: { page: pageParam } }),
+const useCharacters = () => {
+    return useQuery({
+      queryKey: ["characters"],
+      queryFn: apiClient.getEverything,
       staleTime: 1000 * 60 * 5, // Cache for 5 minutes
       
     });

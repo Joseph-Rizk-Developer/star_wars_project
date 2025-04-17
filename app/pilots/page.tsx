@@ -10,15 +10,14 @@ const listOfPilots = () => {
   const [page, setPage] = useState(1);
   const [starship_page, set_starship_page] = useState(1);
   const [pilots, setPilots] = useState<Character[]>([]);
-  const { data: characters } = useCharacters(page);
-  const { data: starships } = useStarships(starship_page);
+  const { data: characters } = useCharacters();
+  const { data: starships } = useStarships();
   const [list_starships, setList_starships] = useState<Starships[]>([]);
   const [topFive, setTopFive] = useState<Character[]>([]);
   const [readyForSum, setReadyForSum] = useState(false);
 
   const top_5_pilots = (pilots: Character[]) => {
     const new_list = pilots
-      .slice()
       .sort(
         (a, b) =>
           b.passenger_capacity.reduce((total, num) => total + num, 0) -
@@ -29,7 +28,7 @@ const listOfPilots = () => {
   };
   useEffect(() => {
     if (characters && starships) {
-      const list_of_pilots = characters.results.filter(
+      const list_of_pilots = characters.filter(
         (char) => char.starships.length >= 1
       );
 
@@ -55,12 +54,15 @@ const listOfPilots = () => {
             return match ? match.name : "nope";
           }),
           passenger_capacity: pilot.starships.map((ship) => {
-            const match = list_starships?.find((s) => s.url === ship);
-            return match
-              ? match.passengers == "unknown"
-                ? 0
-                : parseInt(match.passengers)
-              : 0;
+            
+            const match: Starships | undefined = list_starships?.find((s) => s.url === ship);
+            const passenger = parseInt(match?.passengers?? "")
+            return Number.isNaN(passenger)? 0 : 
+            // return match
+            //   ? match.passengers === "unknown"
+            //     ? 0
+            //     : parseInt(match.passengers)
+            //   : 0;
           }),
         }));
         setReadyForSum(true);
