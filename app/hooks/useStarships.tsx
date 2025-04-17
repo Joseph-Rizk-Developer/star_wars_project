@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import APIClient, { FetchResponse } from "../services/api-client";
 
 export interface Starships {
-  name: string;
+  starship_class: string;
   passengers: string;
   pilots: string;
   url: string;
@@ -10,10 +10,11 @@ export interface Starships {
 
 const apiClient = new APIClient<Starships>("/starships");
 
-const useStarships = () =>
-  useQuery({
+const useStarships = () => {
+  return useQuery({
     queryKey: ["Starships"],
-    queryFn: () => apiClient.getAll,
+    queryFn: apiClient.getEverything,
   });
+};
 
 export default useStarships;
