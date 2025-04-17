@@ -16,7 +16,9 @@ const SelectedName = ({ params: { name } }: Props) => {
     isError,
   } = useSearch(name);
 
-  const planetId = character?.results[0].homeworld
+  console.log("name: " + name);
+
+  const planetId = character?.results[0].fields.homeworld
     .split("/")
     .filter(Boolean)
     .pop();
@@ -27,7 +29,7 @@ const SelectedName = ({ params: { name } }: Props) => {
 
   const filmIds = useMemo(
     () =>
-      character?.results[0].films.map(
+      character?.results[0].fields.films.map(
         (film) => film.split("/").filter(Boolean).pop() as string
       ) ?? [],
     [character]
@@ -35,9 +37,7 @@ const SelectedName = ({ params: { name } }: Props) => {
 
   const { data: films, pending } = useFilms(filmIds);
 
-  const filmTitles = !pending ? films.map((film) => film?.title) : [];
-
-  !pending && console.log(films.map((film) => film?.title));
+  const filmTitles = !pending ? films.map((film) => film?.fields.title) : [];
 
   if (isloadingSearch || isloadingPlanet) {
     return (
@@ -50,7 +50,7 @@ const SelectedName = ({ params: { name } }: Props) => {
   return (
     <div className="w-full h-[100] pt-[10%] pb-[10%] justify-items-center">
       <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style pb-5">
-        {character?.results[0].name}
+        {character?.results[0].fields.name}
       </h1>
       <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <tbody>
@@ -62,11 +62,11 @@ const SelectedName = ({ params: { name } }: Props) => {
 
               <td className="border border-gray-400 px-4 py-2">
                 {header == "homeworld"
-                  ? selectedPlanet?.name
+                  ? selectedPlanet?.fields.name
                   : header == "films"
                   ? filmTitles.join(", ")
                   : character
-                  ? character.results[0][header] || "N/A"
+                  ? character.results[0].fields[header] || "N/A"
                   : ""}
               </td>
             </tr>

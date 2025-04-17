@@ -1,7 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import useCharacters from "../hooks/useCharacters";
-import useCharacter from "../hooks/useCharacter";
 import Link from "next/link";
 import useCharacterData from "../hooks/useCharacterData";
 
@@ -50,7 +49,9 @@ const Characters = () => {
           {paginated_data?.map((character, index) => (
             <tr key={index} className="font-bold hover:bg-yellow-400">
               <td className="border border-gray-400 px-4 py-2">
-                <Link href={`/people/name/${character?.fields.name}`}>
+                <Link
+                  href={`/people/id/${character?.fields.url.split("/").pop()}`}
+                >
                   {character?.fields.name}
                 </Link>
               </td>

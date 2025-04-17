@@ -12,7 +12,7 @@ const apiClient = new APIClient<Films>("/films")
 
 const useFilms = (films: string[]) =>{
    
-    console.log("films log: " + films);
+    
     
     
      return useQueries({

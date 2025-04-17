@@ -26,7 +26,10 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
     isError,
   } = useCharacter(id);
 
-  const planetId = character?.homeworld?.split("/").filter(Boolean).pop()!;
+  const planetId = character?.fields.homeworld
+    ?.split("/")
+    .filter(Boolean)
+    .pop()!;
 
   const { data: selectedPlanet, isLoading: isloadingPlanet } = usePlanet(
     planetId ?? ""
@@ -34,7 +37,7 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
 
   const filmIds = useMemo(
     () =>
-      character?.films.map(
+      character?.fields.films.map(
         (film) => film.split("/").filter(Boolean).pop() as string
       ) ?? [],
     [character]
@@ -42,9 +45,9 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
 
   const { data: films, pending } = useFilms(filmIds);
 
-  const filmTitles = !pending ? films.map((film) => film?.title) : [];
+  const filmTitles = !pending ? films.map((film) => film?.fields.title) : [];
 
-  !pending && console.log(films.map((film) => film?.title));
+  !pending && console.log(films.map((film) => film?.fields.title));
 
   if (isloadingCharacter || isloadingPlanet) {
     return (
@@ -57,7 +60,7 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
   return (
     <div className="w-full h-[100] pt-[10%] pb-[10%] justify-items-center">
       <h1 className="text-6xl text-yellow-400 font-extrabold text-center star-wars-style pb-5">
-        {character?.name}
+        {character?.fields.name}
       </h1>
       <table className="table-auto border-collapse border border-gray-400 w-3xl p-x-6">
         <tbody>
@@ -69,11 +72,11 @@ const SelectedCharacter = ({ params: { id } }: Props) => {
 
               <td className="border border-gray-400 px-4 py-2">
                 {header == "homeworld"
-                  ? selectedPlanet?.name
+                  ? selectedPlanet?.fields.name
                   : header == "films"
                   ? filmTitles.join(", ")
                   : character
-                  ? character[header] || "N/A"
+                  ? character.fields[header] || "N/A"
                   : ""}
               </td>
             </tr>
